@@ -28,7 +28,7 @@ crawler_map = {
 
 @dataclass
 class supabase_db:
-    sys_id : Optional[str] = field(default_factory =None)
+    sys_id : Optional[str] = field(default = None)
     hallname : str = ''
     space : str = ''
     title : str = ''
@@ -135,9 +135,9 @@ class ExhibitionETLPipeline:
         '''
         連接 PostgreSQL 資料庫 (Supabase)，並將數據寫入目標表格。
         '''
-        
+
         df = pd.DataFrame([item.__dict__ for item in records])
-        df.drop(columns = ['sys_id'])
+        df = df.drop(columns = ['sys_id'])
 
         try:
             # 使用 pandas 的 to_sql 寫入數據
