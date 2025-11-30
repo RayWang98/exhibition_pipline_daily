@@ -48,13 +48,15 @@ class ExhibitionETLPipeline:
     def __init__(self, VENUE_NAME : List):
     # --- 1. 核心設定 ---
         self.DATABASE_URL = os.getenv('DATABASE_URL') # 從 .env 讀取 Supabase 連線字串
-        self.TARGET_TABLE = 'exhibition_data' # 我們在 Supabase 建立的資料表名稱
+        self.TARGET_TABLE_1 = 'exhibition_data' # 我們在 Supabase 建立的資料表名稱
+        self.TARGET_TABLE_2 = 'exhibition_data_daily' # 我們在 Supabase 建立的資料表名稱
         self.VENUE_NAME = VENUE_NAME 
         self.TIMEZONE = timezone('Asia/Taipei')
         self.suc_venues : List[str] = [] # 成功展館清單
         self.failed_venues : List[str] = [] # 失敗展館清單
         self.empty_venues : List[str] = [] # 沒有資料展館清單
-        self.db_load_successful = False
+        self.db_load_successful_1 = False
+        self.db_load_successful_2 = False
 
     # --- 2. 啟動相關連線 初始化外部服務 ---
         # Supabase
@@ -150,15 +152,28 @@ class ExhibitionETLPipeline:
             # 使用 pandas 的 to_sql 寫入數據
             # if_exists='replace'：每次執行都刪除舊表格並新建 (測試用)
             # index=False：不將 DataFrame 的索引寫入資料庫
-            df.to_sql(
-                name = self.TARGET_TABLE, 
+
+            # append-data-tableau_use_version
+            df.to_sql( 
+                name = self.TARGET_TABLE_1, 
                 con = self.engine, 
                 if_exists = 'append', # *** 這裡可以改為 'append' 或 'replace' ***
                 index = False
             )
-            
-            print(f'✅ 數據成功載入 Supabase 到表格 {self.TARGET_TABLE}，共 {len(df)} 筆。')
-            self.db_load_successful = True
+
+            print(f'✅ 數據成功累積載入 Supabase 到表格 {self.TARGET_TABLE_1}，共 {len(df)} 筆。')
+            self.db_load_successful_1 = True
+
+            # replace-data-streamlit_use_version
+            df.to_sql( # append-data-time_series
+                name = self.TARGET_TABLE_2, 
+                con = self.engine, 
+                if_exists = 'replace', # *** 這裡可以改為 'append' 或 'replace' ***
+                index = False
+            )
+
+            print(f'✅ 數據成功載入 Supabase 到表格 {self.TARGET_TABLE_2}，共 {len(df)} 筆。')
+            self.db_load_successful_2 = True
             
         except Exception as e:
             print(f'❌ 數據載入失敗，錯誤訊息: {e}')
@@ -172,12 +187,16 @@ class ExhibitionETLPipeline:
         print(f'失敗抓取的展館：{self.failed_venues}')
         print(f'沒有抓取到數據的展館：{self.empty_venues}')
         db_save_status = '存入失敗'
-        if self.db_load_successful:
+        if self.db_load_successful_1 and self.db_load_successful_2:
             db_save_status = '存入成功!  '
+        elif not self.db_load_successful_1 and self.db_load_successful_2:
+            db_save_status = '日更資料存入成功!  累積資料存入失敗'
+        elif self.db_load_successful_1 and not self.db_load_successful_2:
+            db_save_status = '累積資料資料存入成功!  日更資料存入失敗'
         elif self.engine:
-            db_save_status = '存入失敗!  成功連線，但載入發生SQL或IO錯誤，請檢察DB狀態'
+            db_save_status = '皆存入失敗!  成功連線，但載入發生SQL或IO錯誤，請檢察DB狀態'
         else:
-            db_save_status = '存入失敗!  連線就失敗了!請檢查!'
+            db_save_status = '皆存入失敗!  連線就失敗了!請檢查!'
 
         print(f'資料庫存入狀態：{db_save_status}')
 
