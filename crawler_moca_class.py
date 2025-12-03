@@ -170,7 +170,7 @@ class ExhibitionETLPipeline:
         print('Info : 執行地理編碼')
 
         for item in anns:
-            full_addr = f'{item.addr} {item.space}'
+            full_addr = f'{item.addr}'
 
             try:
                 geocode_result = self.gmaps.geocode(full_addr) # type: ignore

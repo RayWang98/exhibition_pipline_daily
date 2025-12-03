@@ -267,7 +267,7 @@ class ExhibitionETLPipeline:
             data.start_date = date_interval.split('-')[0] # 展覽開始日期
             data.end_date = date_interval.split('-')[-1] # 展覽開始日期
 
-            data.space = i.select_one('div.w-9 p.info-middle').get_text(strip = True) # 展覽地點
+            data.space = i.select_one('div.w-9 p.info-middle').get_text(strip = True).replace('~', '-') # 展覽地點
             data.visit_time_interval = visit_time_info # 參觀時間
             data.addr = addr_info # 館址地址
             data.price = price_info # 票價
@@ -290,7 +290,7 @@ class ExhibitionETLPipeline:
         print('Info : 執行地理編碼')
 
         for item in anns:
-            full_addr = f'{item.addr} {item.space}'
+            full_addr = f'{item.addr}'
 
             try:
                 geocode_result = self.gmaps.geocode(full_addr) # type: ignore

@@ -71,7 +71,7 @@ class GeminiExtractedData:
     visit_time_interval : str # 參觀時間
     price : str # 票價
     note : str = '無資訊' # 節取出來的額外資訊
-    url : List[str] = field(default_factory=list) # 官網 活動相關的所有重要網址(官網、FB、購票連結等)。
+    url : List[str] = field(default_factory = list) # 官網 活動相關的所有重要網址(官網、FB、購票連結等)。
 
 class EmptyResponseError(Exception):
     '''自定義錯誤：當 API 回傳空的文字內容時拋出。'''
@@ -112,7 +112,7 @@ class ExhibitionETLPipeline:
         
         # ======================== GOOGLE MAPS ========================
         if self.MAPS_KEY:
-            self.gmaps = googlemaps.Client(key=self.MAPS_KEY)
+            self.gmaps = googlemaps.Client(key = self.MAPS_KEY)
             print('google map初始化成功')
         else:
             self.gmaps = None
