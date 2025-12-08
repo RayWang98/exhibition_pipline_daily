@@ -181,9 +181,10 @@ class ExhibitionETLPipeline:
         except Exception as e:
             print(f'❌ 數據載入失敗，錯誤訊息: {e}')
 
-    def _tag_pipeline(self):
+    def _tag_pipeline(self) -> None:
 
-        self.taglogs = geniai().run_ai_analysis()
+        self.taglogs = geniai()
+        self.taglogs.run_ai_analysis()
     
     def _get_final_summary(self) -> None:
         print("\n" + "="*50)

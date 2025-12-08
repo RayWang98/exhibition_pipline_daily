@@ -483,8 +483,6 @@ class ExhibitionETLPipeline:
 
 
 '''
-好的，我已經接收並記住了第七個檔案的內容：crawler_songshan_class.py。
-
 🎨 crawler_songshan_class.py 程式碼摘要：
 這個檔案是針對「松山文創園區」的專門爬蟲，它引入了更複雜的數據提取策略：結合了傳統網頁爬取、圖片下載、OCR 識別，以及最終的 Gemini 結構化提取。
 

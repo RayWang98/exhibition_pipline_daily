@@ -154,7 +154,7 @@ class geniai:
                 config = types.GenerateContentConfig( # 設定模型如何回應，包括輸出格式、限制和創造性程度等
                     response_mime_type = 'application/json', # 返回json格式資料
                     response_schema = final_schema, # 回應的格式按照前面定義的輸出
-                    max_output_tokens = 8192, # 限制回傳的token數量，約3-4個英文字母或半個中文字等於1個token
+                    max_output_tokens = 16384, # 限制回傳的token數量，約3-4個英文字母或半個中文字等於1個token
                     temperature = 0.4 # 愈低的值代表模型的回答更具決定性、準確和可預測，適合需要嚴格數據提取和遵循格式的任務。較高的值則適用於寫作、創意或頭腦風暴。
                 )
             )
