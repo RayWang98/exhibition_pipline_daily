@@ -93,11 +93,12 @@ class geniai:
     def _connectsql_get_data(self) -> pd.DataFrame:
         try:
             df = pd.read_sql_query(self.SQLQUERY, self.engine) # 使用 Pandas 讀取數據
-            if len(df) = 0:
-                print('空集合')
+            if len(df) == 0:
+                print('沒抓到資料喔!')
+                return pd.DataFrame()
             else:
                 print(f'Info : 成功讀取')
-            return df
+                return df
         
         except Exception as e:
             print(f'Warning : 請注意，發生錯誤。 {e}')
