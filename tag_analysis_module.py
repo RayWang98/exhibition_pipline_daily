@@ -41,8 +41,8 @@ class geniai:
         self.GEMINI_KEY = os.getenv('GEMINI_API_KEY') # AI APIKEY
         self.INITIAL_DELAY = 5
         self.BATCHSIZE = 15
-        self.databasename_get = os.getenv('databasename_get')
-        self.databasename_save = os.getenv('databasename_save')
+        self.databasename_get = os.getenv('DATABASENAME_GET')
+        self.databasename_save = os.getenv('DATABASENAME_SAVE')
         self.DATABASE_URL = os.getenv('DATABASE_URL')
         self.SQLQUERY = f'select title, hallname, overview from {self.databasename_get}'
         self.TIMEZONE = timezone('Asia/Taipei')
